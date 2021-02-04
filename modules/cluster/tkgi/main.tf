@@ -89,7 +89,7 @@ resource "null_resource" "tkgi_cluster_info" {
   provisioner "local-exec" {
     when = destroy
     command = "rm bin/cluster.json"
-    working_dir = path.module
+    working_dir = abspath(path.module)
   }
 
   depends_on = [
@@ -99,7 +99,7 @@ resource "null_resource" "tkgi_cluster_info" {
 
 #create data to be used in the outputs from the previosuly created file
 data "local_file" "tkgi_cluster_data" {
-    filename = "${path.module}/bin/cluster.json"
+    filename = abspath("${path.module}/bin/cluster.json")
     depends_on = [
     null_resource.tkgi_cluster_info
   ]
