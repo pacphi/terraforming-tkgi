@@ -1,17 +1,17 @@
 data "local_file" "tkgi_apply" {
-  filename = "${path.module}/bin/tkgi-apply.sh"
+  filename = abspath("${path.module}/bin/tkgi-apply.sh")
 }
 
 data "local_file" "tkgi_delete" {
-  filename = "${path.module}/bin/tkgi-delete.sh"
+  filename = abspath("${path.module}/bin/tkgi-delete.sh")
 }
 
 data "local_file" "tkgi_get" {
-  filename = "${path.module}/bin/tkgi-get.sh"
+  filename = abspath("${path.module}/bin/tkgi-get.sh")
 }
 
 data "local_file" "tkgi_login" {
-  filename ="${path.module}/bin/tkgi-login.sh"
+  filename = abspath("${path.module}/bin/tkgi-login.sh")
 }
 
 #the below two resources are split due to how null_resource works. in order to allow for 
