@@ -1,3 +1,18 @@
+data "local_file" "tkgi_apply" {
+  filename = "${path.module}/bin/tkgi-apply.sh"
+}
+
+data "local_file" "tkgi_delete" {
+  filename = "${path.module}/bin/tkgi-delete.sh"
+}
+
+data "local_file" "tkgi_get" {
+  filename = "${path.module}/bin/tkgi-get.sh"
+}
+
+data "local_file" "tkgi_login" {
+  filename ="${path.module}/bin/tkgi-login.sh"
+}
 
 #the below two resources are split due to how null_resource works. in order to allow for 
 #updates without a destroy first we need to separate the destroy into it's own rersource.
@@ -18,11 +33,8 @@ resource "null_resource" "tkgi_cluster" {
       TKGI_EXTERNAL_HOSTNAME = var.tkgi_external_hostname
       TKGI_TAGS = var.tkgi_tags
     }
-    command = "bin/tkgi-login.sh && bin/tkgi-apply.sh"
-    working_dir = path.module
+    command = "${data.local_file.tkgi_login.filename} && ${data.local_file.tkgi_apply.filename}"
   }
-  depends_on = [
-  ]
 }
 
 resource "null_resource" "tkgi_cluster_destroy" {
@@ -42,11 +54,8 @@ resource "null_resource" "tkgi_cluster_destroy" {
       TKGI_CLUSTER_NAME =  self.triggers.tkgi_cluster_name
     }
     when = destroy
-    command = "bin/tkgi-login.sh && bin/tkgi-delete.sh"
-    working_dir = path.module
+    command = "${data.local_file.tkgi_login.filename} && ${data.local_file.tkgi_delete.filename}"
   }
-  depends_on = [
-  ]
 }
 
 
@@ -63,8 +72,7 @@ resource "null_resource" "tkgi_cluster_info" {
       TKGI_USER = var.tkgi_user
       TKGI_CLUSTER_NAME = var.tkgi_cluster_name
     }
-    command = "bin/tkgi-login.sh && bin/tkgi-get.sh"
-    working_dir = path.module
+    command = "${data.local_file.tkgi_login.filename} && ${data.local_file.tkgi_get.filename}"
   }
   provisioner "local-exec" {
     when = destroy
